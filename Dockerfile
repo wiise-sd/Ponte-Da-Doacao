@@ -1,26 +1,40 @@
-# --- Stage 1: Build ---
-FROM node:20-alpine AS builder
+
+FROM node:20.8-alpine AS builder
 
 WORKDIR /app
 
 COPY package.json package-lock.json ./
-# Usa npm ci para instalações determinísticas
-RUN npm ci
+RUN npm ci --only=production
 
 COPY . .
 
 RUN npm run build
 
-# --- Stage 2: Production ---
-FROM node:20-alpine AS runner
+FROM node:20.8-alpine AS runner
 
 WORKDIR /app
 
-# Copia apenas as dependências de produção
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
-COPY package.json .
+COPY package.json ./
 
 EXPOSE 3333
 
-CMD [ "node", "dist/server.js" ]
+USER node
+
+ENV NODE_ENV=production
+
+CMD ["node", "dist/server.js"]
+
+FROM node:20.8-alpine AS dev
+
+WORKDIR /app
+
+COPY package.json package-lock.json ./
+RUN npm ci --only=development
+
+COPY . .
+
+EXPOSE 3333
+
+CMD ["npm", "run", "dev"]
