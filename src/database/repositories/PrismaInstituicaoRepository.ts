@@ -23,4 +23,11 @@ export class PrismaInstituicaoRepository implements InstituicaoRepository {
     });
     return instituicao;
   }
+
+  async findByCnpj(cnpj: string): Promise<Instituicao | null> {
+    const instituicao = await prisma.instituicao.findUnique({
+      where: { cnpj },
+    });
+    return instituicao;
+  }
 }
