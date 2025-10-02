@@ -1,0 +1,26 @@
+@baseUrl = http://localhost:3333
+@now = {{$timestamp}}
+@uid = {{$guid}}
+
+### Registro (POST)
+# @name register
+POST {{baseUrl}}/api/registrar
+Content-Type: application/json
+Accept: application/json
+
+{
+  "nome": "João Silva",
+  "cnpj": "12345678000195",
+  "telefone": "11999991234",
+  "email": "joao.silva@example.com",
+  "senha": "senha123",
+  "descricao": "Instituição de Teste"
+}
+
+
+### (Opcional) Capturar ID retornado
+@userId = {{register.response.body.$.id}}
+
+### (Opcional) Buscar usuário recém-criado
+GET {{baseUrl}}/users/{{userId}}
+Accept: application/json
