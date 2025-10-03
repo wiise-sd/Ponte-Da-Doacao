@@ -1,6 +1,10 @@
 import { InstituicaoRepository } from "@/database/repositories/InstituicaoRepository";
 import { Prisma } from "@/generated/prisma";
 import { hashPassword } from "@/utils/bcrypt";
+import {
+  CnpjAlreadyInUseError,
+  EmailAlreadyInUseError,
+} from "../errors/instituicao";
 
 export class CreateInstituicaoUseCase {
   constructor(private instituicaoRepository: InstituicaoRepository) {}
@@ -12,14 +16,14 @@ export class CreateInstituicaoUseCase {
       await this.instituicaoRepository.findByEmail(email);
 
     if (instituicaoWithProvidedEmail) {
-      throw new Error("Instituição com esse email já existe.");
+      throw new EmailAlreadyInUseError();
     }
 
     const cnpjWithProvidedCnpj =
       await this.instituicaoRepository.findByCnpj(cnpj);
 
     if (cnpjWithProvidedCnpj) {
-      throw new Error("Instituição com esse CNPJ já existe.");
+      throw new CnpjAlreadyInUseError();
     }
 
     const senha_hash = await hashPassword(senha);
@@ -34,6 +38,16 @@ export class CreateInstituicaoUseCase {
       cnpj,
     };
 
-    return this.instituicaoRepository.create(instituicao);
+    const instituicaoCreated =
+      await this.instituicaoRepository.create(instituicao);
+
+    return {
+      id: instituicaoCreated.id,
+      nome: instituicaoCreated.nome,
+      email: instituicaoCreated.email,
+      telefone: instituicaoCreated.telefone,
+      descricao: instituicaoCreated.descricao,
+      cnpj: instituicaoCreated.cnpj,
+    };
   }
 }
