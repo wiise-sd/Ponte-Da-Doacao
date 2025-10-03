@@ -1,9 +1,4 @@
 import { z } from "zod";
-import { createErrorMap } from "zod-validation-error";
-
-// zod.config({
-//   customError: createErrorMap(),
-// });
 
 export const createInstituicaoSchema = z.object({
   nome: z
