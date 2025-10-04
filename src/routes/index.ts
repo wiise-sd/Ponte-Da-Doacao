@@ -1,4 +1,4 @@
-import { RequestHandler, Router, Request, Response } from "express";
+import { Router, Request, Response } from "express";
 import { PrismaInstituicaoRepository } from "@/database/repositories/PrismaInstituicaoRepository";
 import { CreateInstituicaoUseCase } from "@/use-cases/registrar/create-instituicao";
 import { InstituicaoController } from "@/controllers/InstituicaoController";
@@ -16,7 +16,7 @@ routes.post("/api/registrar", async (req: Request, res: Response) => {
     createInstituicaoUseCase
   );
 
-  const { status, body } = await instituicaoController.handle(req.body);
+  const { status, body } = await instituicaoController.handle(req);
   res.status(status).json(body);
 });
 
