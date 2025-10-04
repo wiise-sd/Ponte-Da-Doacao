@@ -9,10 +9,10 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "nome": "João Silva",
-  "cnpj": "12345678000195",
-  "telefone": "11999991234",
-  "email": "joao.silva@example.com",
+  "nome": "Instituição de Teste",
+  "cnpj": "12345678000294",
+  "telefone": "11999991239",
+  "email": "joao.silva11@example.com",
   "senha": "senha123",
   "descricao": "Instituição de Teste"
 }
